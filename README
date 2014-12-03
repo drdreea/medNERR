@@ -1,0 +1,49 @@
+This file explains how to run the NER and relation extraction system. The system relies on HMM with conditional constraints and is explained in the 'A medication extraction framework for electronic health records'  MS thesis located online at http://dspace.mit.edu/bitstream/handle/1721.1/78463/834086257.pdf?sequence=1
+
+@author: Andreea Bodnari
+@date: August 30, 2012
+@last edit date: May 28, 2013
+ 
+=== CORPUS FOLDER STRUCTURE ===
+Each corpus folder should contain:
+1. raw folder: raw files
+2. gs folder: gs files
+
+and pre-processing files
+3. sentences folder: files with associated sentences for each raw file 
+4. umls folder: umls annotations for each raw file
+5. parsed folder: parses of each raw file
+6. sections folder: section annotations for each raw file
+7. phonemes folder: the phoneme representation for each raw file 
+
+=== PREPROCESSING ===
+Use the preprocessing script at HOME/tools/preProcessing.py in order to preprocess raw corpus files.
+
+The following steps need to be followed in order to pre-process an input corpus
+1. TOKENIZATION and SENTENCE EXTRACTION: if the corpus is not tokenized, perform tokenization and create the tokenized directory
+input: raw files
+output: tokenized and sentence split files
+USAGE: tr '[:upper:]' '[:lower:]' < sample.txt |  ./parse-identifiers.pl | ./raw2tok.lua | ./reconstitute-text.pl -b | perl -pe 's/^ // ; ' > out.txt
+
+2. SENTENCE PARSING: parse the corpus sentences
+input: sentence delimited files
+output: parsed files
+USAGE:parse the raw files using resources/parser/gdep-beta2/filesToParseTrees.py
+
+3. UMLS MAPPING: apply metamap on the corpus sentences and obtain the UMLS concepts
+input: sentence delimited files
+output: umls concept files
+
+4. SECTION IDENTIFICATION: identify the sections occurring inside the text
+input: sentence delimited files
+output: section delimited files
+
+=== EXPERIMENTS ===
+To run the experiments:
+
+1. generate the med and reason concepts for trainRelation using the trainConcepts GS
+2. generate the med and reason concepts for test using the train GS
+3. merge de system med and system reason files using resources/mergeMedandReasonFiles.py; add the valid relations between the system meds and system reasons using edu.mit.src/experiments/MatchSysConceptsUsingGS.java
+
+
+
